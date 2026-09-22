@@ -57,3 +57,41 @@ class GroupMember(db.Model):
     joined_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     user = db.relationship("User")
+
+
+class Expense(db.Model):
+    __tablename__ = "expenses"
+
+    id = db.Column(db.Integer, primary_key=True)
+    group_id = db.Column(db.Integer, db.ForeignKey("groups.id"), nullable=False)
+    paid_by = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    amount = db.Column(db.Float, nullable=False)
+    description = db.Column(db.String(255), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    splits = db.relationship(
+        "ExpenseSplit", backref="expense", cascade="all, delete-orphan"
+    )
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "group_id": self.group_id,
+            "paid_by": self.paid_by,
+            "amount": self.amount,
+            "description": self.description,
+            "created_at": self.created_at.isoformat(),
+            "splits": [s.to_dict() for s in self.splits],
+        }
+
+
+class ExpenseSplit(db.Model):
+    __tablename__ = "expense_splits"
+
+    id = db.Column(db.Integer, primary_key=True)
+    expense_id = db.Column(db.Integer, db.ForeignKey("expenses.id"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    amount_owed = db.Column(db.Float, nullable=False)
+
+    def to_dict(self):
+        return {"user_id": self.user_id, "amount_owed": self.amount_owed}
