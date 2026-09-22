@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import api from "../api/client";
+import ExpenseForm from "../components/ExpenseForm";
 
 function GroupDetail() {
   const { groupId } = useParams();
@@ -31,6 +32,9 @@ function GroupDetail() {
         <h2>{group.name}</h2>
       </header>
       <p className="muted">Members: {group.members.map((m) => m.name).join(", ")}</p>
+
+      <h3>Add an expense</h3>
+      <ExpenseForm group={group} onExpenseAdded={loadExpenses} />
 
       <h3>Expenses</h3>
       {expenses.length === 0 ? (
