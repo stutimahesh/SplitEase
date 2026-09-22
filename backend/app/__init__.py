@@ -13,6 +13,8 @@ def create_app():
     jwt.init_app(app)
     CORS(app)
 
+    from . import models  # noqa: F401  (ensures models are registered before create_all)
+
     with app.app_context():
         db.create_all()
 
