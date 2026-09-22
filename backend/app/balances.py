@@ -23,6 +23,61 @@ def get_balances(group_id):
     return jsonify(result)
 
 
+@balances_bp.route("/groups/<int:group_id>/settle-up", methods=["GET"])
+@jwt_required()
+def get_settle_up(group_id):
+    user_id = int(get_jwt_identity())
+    require_member(group_id, user_id)
+
+    net_balances = _calculate_net_balances(group_id)
+    transactions = _minimize_transactions(net_balances)
+
+    users = {u.id: u.to_dict() for u in User.query.filter(User.id.in_(net_balances.keys()))}
+    result = [
+        {
+            "from": users[t["from"]],
+            "to": users[t["to"]],
+            "amount": round(t["amount"], 2),
+        }
+        for t in transactions
+    ]
+    return jsonify(result)
+
+
+def _minimize_transactions(net_balances):
+    """Greedily match the largest creditor with the largest debtor until every
+    balance is zero. This minimizes the number of payments needed to settle
+    the group, instead of everyone paying back every individual expense.
+    """
+    creditors = sorted(
+        ([uid, amt] for uid, amt in net_balances.items() if amt > 0.01),
+        key=lambda x: -x[1],
+    )
+    debtors = sorted(
+        ([uid, -amt] for uid, amt in net_balances.items() if amt < -0.01),
+        key=lambda x: -x[1],
+    )
+
+    transactions = []
+    i, j = 0, 0
+    while i < len(debtors) and j < len(creditors):
+        debtor_id, debt_amt = debtors[i]
+        creditor_id, credit_amt = creditors[j]
+        settled = min(debt_amt, credit_amt)
+
+        transactions.append({"from": debtor_id, "to": creditor_id, "amount": settled})
+
+        debtors[i][1] -= settled
+        creditors[j][1] -= settled
+
+        if debtors[i][1] < 0.01:
+            i += 1
+        if creditors[j][1] < 0.01:
+            j += 1
+
+    return transactions
+
+
 def _calculate_net_balances(group_id):
     """net balance = total the member paid - total of their own split shares.
 
