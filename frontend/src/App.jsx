@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 
 import { useAuth } from "./context/AuthContext";
+import Groups from "./pages/Groups";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 
@@ -20,7 +21,7 @@ function App() {
           path="/groups"
           element={
             <RequireAuth>
-              <p>Groups page coming next.</p>
+              <Groups />
             </RequireAuth>
           }
         />
