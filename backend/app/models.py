@@ -22,3 +22,38 @@ class User(db.Model):
 
     def to_dict(self):
         return {"id": self.id, "name": self.name, "email": self.email}
+
+
+class Group(db.Model):
+    __tablename__ = "groups"
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(120), nullable=False)
+    created_by = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    members = db.relationship(
+        "GroupMember", backref="group", cascade="all, delete-orphan"
+    )
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "created_by": self.created_by,
+            "created_at": self.created_at.isoformat(),
+        }
+
+
+class GroupMember(db.Model):
+    __tablename__ = "group_members"
+    __table_args__ = (
+        db.UniqueConstraint("group_id", "user_id", name="uq_group_member"),
+    )
+
+    id = db.Column(db.Integer, primary_key=True)
+    group_id = db.Column(db.Integer, db.ForeignKey("groups.id"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    joined_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    user = db.relationship("User")
