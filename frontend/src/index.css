@@ -10,7 +10,177 @@ body {
 }
 
 .app-shell {
-  max-width: 960px;
+  max-width: 720px;
   margin: 0 auto;
   padding: 24px;
+}
+
+h1,
+h2,
+h3 {
+  color: #1f2430;
+}
+
+.brand {
+  display: inline-block;
+  margin-bottom: 8px;
+}
+
+.brand h1 {
+  font-size: 1.4rem;
+  margin: 0;
+}
+
+a {
+  color: #4a3aff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.muted {
+  color: #7a7f8c;
+  font-size: 0.9rem;
+}
+
+.error-text {
+  color: #d64545;
+  font-size: 0.9rem;
+  margin: 4px 0;
+}
+
+.positive {
+  color: #1f9d55;
+  font-weight: 600;
+}
+
+.negative {
+  color: #d64545;
+  font-weight: 600;
+}
+
+button {
+  background: #4a3aff;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #3a2cd6;
+}
+
+.link-button {
+  background: none;
+  color: #4a3aff;
+  padding: 0;
+  margin-left: 12px;
+  font-weight: 600;
+}
+
+.link-button:hover {
+  background: none;
+  text-decoration: underline;
+}
+
+input,
+select {
+  padding: 10px 12px;
+  border: 1px solid #d7d9e2;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+.auth-page {
+  max-width: 360px;
+  margin: 48px auto;
+}
+
+.auth-form,
+.inline-form,
+.expense-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.inline-form {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.card-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.card {
+  background: white;
+  border: 1px solid #e5e7f0;
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+
+.balance-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.split-toggle {
+  display: flex;
+  gap: 16px;
+  font-size: 0.9rem;
+}
+
+.split-toggle label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: normal;
+}
+
+.custom-splits {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: #f0f1f7;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.custom-splits label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.custom-splits input {
+  width: 120px;
+}
+
+.expense-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.9rem;
 }

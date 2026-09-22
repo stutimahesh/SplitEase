@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Link, Navigate, Route, Routes } from "react-router-dom";
 
 import { useAuth } from "./context/AuthContext";
 import GroupDetail from "./pages/GroupDetail";
@@ -15,6 +15,9 @@ function RequireAuth({ children }) {
 function App() {
   return (
     <div className="app-shell">
+      <Link to="/groups" className="brand">
+        <h1>SplitEase</h1>
+      </Link>
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
