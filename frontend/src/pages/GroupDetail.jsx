@@ -4,22 +4,27 @@ import { Link, useParams } from "react-router-dom";
 import api from "../api/client";
 import BalancesView from "../components/BalancesView";
 import ExpenseForm from "../components/ExpenseForm";
+import SettleUp from "../components/SettleUp";
 
 function GroupDetail() {
   const { groupId } = useParams();
   const [group, setGroup] = useState(null);
   const [expenses, setExpenses] = useState([]);
   const [balances, setBalances] = useState([]);
+  const [settleUp, setSettleUp] = useState([]);
 
   const loadGroup = () => api.get(`/groups/${groupId}`).then((res) => setGroup(res.data));
   const loadExpenses = () =>
     api.get(`/groups/${groupId}/expenses`).then((res) => setExpenses(res.data));
   const loadBalances = () =>
     api.get(`/groups/${groupId}/balances`).then((res) => setBalances(res.data));
+  const loadSettleUp = () =>
+    api.get(`/groups/${groupId}/settle-up`).then((res) => setSettleUp(res.data));
 
   const refreshAll = () => {
     loadExpenses();
     loadBalances();
+    loadSettleUp();
   };
 
   useEffect(() => {
@@ -44,6 +49,9 @@ function GroupDetail() {
 
       <h3>Balances</h3>
       <BalancesView balances={balances} />
+
+      <h3>Settle up</h3>
+      <SettleUp transactions={settleUp} />
 
       <h3>Add an expense</h3>
       <ExpenseForm group={group} onExpenseAdded={refreshAll} />
