@@ -15,8 +15,10 @@ def create_app():
 
     from . import models  # noqa: F401  (ensures models are registered before create_all)
     from .auth import auth_bp
+    from .groups import groups_bp
 
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
+    app.register_blueprint(groups_bp, url_prefix="/api/groups")
 
     with app.app_context():
         db.create_all()
