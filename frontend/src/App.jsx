@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 
 import { useAuth } from "./context/AuthContext";
+import GroupDetail from "./pages/GroupDetail";
 import Groups from "./pages/Groups";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -22,6 +23,14 @@ function App() {
           element={
             <RequireAuth>
               <Groups />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/groups/:groupId"
+          element={
+            <RequireAuth>
+              <GroupDetail />
             </RequireAuth>
           }
         />
