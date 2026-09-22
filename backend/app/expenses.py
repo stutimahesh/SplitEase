@@ -18,6 +18,7 @@ def add_expense(group_id):
     amount = data.get("amount")
     description = data.get("description")
     paid_by = data.get("paid_by", user_id)
+    custom_splits = data.get("splits")  # optional: [{user_id, amount_owed}, ...]
 
     if not amount or not description:
         return jsonify({"error": "amount and description are required"}), 400
@@ -25,8 +26,14 @@ def add_expense(group_id):
     members = GroupMember.query.filter_by(group_id=group_id).all()
     member_ids = [m.user_id for m in members]
 
-    share = round(float(amount) / len(member_ids), 2)
-    splits = [{"user_id": uid, "amount_owed": share} for uid in member_ids]
+    if custom_splits:
+        total_split = sum(float(s["amount_owed"]) for s in custom_splits)
+        if round(total_split, 2) != round(float(amount), 2):
+            return jsonify({"error": "splits must add up to the total amount"}), 400
+        splits = custom_splits
+    else:
+        share = round(float(amount) / len(member_ids), 2)
+        splits = [{"user_id": uid, "amount_owed": share} for uid in member_ids]
 
     expense = Expense(
         group_id=group_id, paid_by=paid_by, amount=amount, description=description
